@@ -3,14 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package drinkkiappi;
+package tikape.runko.database;
 
+import tikape.runko.domain.Raakaaine;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import tikape.runko.*;
+
 
 /**
  *
@@ -20,15 +23,14 @@ public class RaakaaineDao {
 
     private Database database;
 
-    public AnnosDao(Database database) {
+    public RaakaaineDao(Database database) {
         this.database = database;
     }
-
-    @Override
-    public Raakaaine findOne(Integer key) throws SQLException {
+    
+    public Raakaaine findOne(String key) throws SQLException {
         Connection conn = database.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM RaakaAine WHERE id = ?");
-        stmt.setInt(1, key);
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM RaakaAine WHERE nimi = ?");
+        stmt.setString(1, key);
 
         ResultSet rs = stmt.executeQuery();
         boolean hasOne = rs.next();
@@ -36,7 +38,7 @@ public class RaakaaineDao {
             return null;
         }
 
-        Raakaaine a = new Raakaaine(rs.getInt("id"), rs.getString("nimi"));
+        Raakaaine a = new Raakaaine(rs.getString("nimi"));
 
         stmt.close();
         rs.close();
@@ -46,17 +48,16 @@ public class RaakaaineDao {
         return a;
     }
 
-    @Override
-    public List<Annos> findAll() throws SQLException {
-        List<Annos> Annokset = new ArrayList<>();
+    public List<Raakaaine> findAll() throws SQLException {
+        List<Raakaaine> Raakaaineet = new ArrayList<>();
 
         Connection conn = database.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Annos");
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Raakaaine");
 
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
-            Annos a = new Annos(rs.getInt("id"), rs.getString("nimi"));
-            Annokset.add(a);
+            Raakaaine a = new Raakaaine(rs.getString("nimi"));
+            Raakaaineet.add(a);
         }
 
         stmt.close();
@@ -64,23 +65,22 @@ public class RaakaaineDao {
 
         conn.close();
 
-        return Annokset;
+        return Raakaaineet;
     }
 
-    @Override
-    public Annos saveOrUpdate(Annos object) throws SQLException {
-        if (object.getId() == null) {
-            return save(object);
+    public Raakaaine saveOrUpdate(Raakaaine object) throws SQLException {
+        Raakaaine tarkastelu = findOne(object.getNimi());
+        if (tarkastelu == null) {
+            return save(tarkastelu);
         } else {
 
-            return update(object);
+            return update(tarkastelu);
         }
     }
 
-    @Override
     public void delete(Integer key) throws SQLException {
         Connection conn = database.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("DELETE FROM Annos WHERE id = ?");
+        PreparedStatement stmt = conn.prepareStatement("DELETE FROM Raakaaine WHERE nimi = ?");
 
         stmt.setInt(1, key);
         stmt.executeUpdate();
@@ -89,25 +89,25 @@ public class RaakaaineDao {
         conn.close();
     }
 
-    private Annos save(Annos annos) throws SQLException {
+    private Raakaaine save(Raakaaine raakaaine) throws SQLException {
 
         Connection conn = database.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Annos"
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Raakaaine"
                 + " (nimi)"
                 + " VALUES (?)");
-        stmt.setString(1, annos.getNimi());
+        stmt.setString(1, raakaaine.getNimi());
 
         stmt.executeUpdate();
         stmt.close();
 
-        stmt = conn.prepareStatement("SELECT * FROM Annos"
+        stmt = conn.prepareStatement("SELECT * FROM Raakaaine"
                 + " WHERE nimi = ?");
-        stmt.setString(1, annos.getNimi());
+        stmt.setString(1, raakaaine.getNimi());
 
         ResultSet rs = stmt.executeQuery();
         rs.next(); // vain 1 tulos
 
-        Annos a = new Annos(rs.getInt("id"), rs.getString("nimi"));
+        Raakaaine a = new Raakaaine(rs.getString("nimi"));
 
         stmt.close();
         rs.close();
@@ -118,18 +118,18 @@ public class RaakaaineDao {
     }
 
     // Huom, en implementoi tata kun ei tarvita
-    private Annos update(Annos annos) throws SQLException {
+    private Raakaaine update(Raakaaine raakaaine) throws SQLException {
 
         Connection conn = database.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("UPDATE Annos SET"
+        PreparedStatement stmt = conn.prepareStatement("UPDATE Raakaaine SET"
                 + " nimi = * WHERE id = ?");
-        stmt.setString(1, annos.getNimi());
+        stmt.setString(1, raakaaine.getNimi());
 
         stmt.executeUpdate();
 
         stmt.close();
         conn.close();
 
-        return annos;
+        return raakaaine;
     }
 }

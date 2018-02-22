@@ -18,7 +18,7 @@ and open the template in the editor.
         <ul>
             <li th:each="arvo : ${lista}">
 
-                <a href="@{~drinkki/{arvo.id} (id={arvo.id]})"> <span th:text="${arvo.nimi}"> </span> </a>
+                <a th:href="@{~/drinkki/{id}(id=${arvo.nimi})}"> <span th:text="${arvo.nimi}"> </span> </a>
                 <!--Yllä pitäisi olla linkki missä url on drinkki/id, se ei toimi vielä-->
 
                 <!-- Tätä ei tarvita vielä mutta hyvä olla tallessa>
@@ -38,7 +38,7 @@ and open the template in the editor.
 
             </li>
             <li> 
-                <a href=""> Tarkastele ja lisää aineksia </a>
+                <a href="/lisaamisnakyma"> Tarkastele ja lisää aineksia </a>
                 <!-- tähän linkki -->
             </li>
             <!-- Tämä osa luo uusi drinkki sivulle, huonekalun tilalle nykyisen tietokannan nimi
@@ -47,6 +47,7 @@ and open the template in the editor.
                 <input type="submit"/>
             </form>
             -->
+        </ul>
     </body>
 
 </html>

@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package drinkkiappi;
+package tikape.runko.database;
 
+import tikape.runko.domain.Annos;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import tikape.runko.*;
 
 /**
  *
@@ -24,11 +26,10 @@ public class AnnosDao implements Dao< Annos, Integer> {
         this.database = database;
     }
 
-    @Override
-    public Annos findOne(Integer key) throws SQLException {
+    public Annos findOne(String key) throws SQLException {
         Connection conn = database.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Annos WHERE id = ?");
-        stmt.setInt(1, key);
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Annos WHERE nimi = ?");
+        stmt.setString(1, key);
 
         ResultSet rs = stmt.executeQuery();
         boolean hasOne = rs.next();
@@ -36,7 +37,7 @@ public class AnnosDao implements Dao< Annos, Integer> {
             return null;
         }
 
-        Annos a = new Annos(rs.getInt("id"),rs.getString("nimi"));
+        Annos a = new Annos(rs.getString("nimi"));
 
         stmt.close();
         rs.close();
@@ -55,7 +56,7 @@ public class AnnosDao implements Dao< Annos, Integer> {
 
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
-            Annos a = new Annos(rs.getInt("id"),rs.getString("nimi"));
+            Annos a = new Annos(rs.getString("nimi"));
             Annokset.add(a);
         }
 
@@ -69,7 +70,8 @@ public class AnnosDao implements Dao< Annos, Integer> {
 
     @Override
     public Annos saveOrUpdate(Annos object) throws SQLException {
-        if (object.getId() == null) {
+        Annos tarkastelu = findOne(object.getNimi());
+        if (tarkastelu == null) {
             return save(object);
         } else {
 
@@ -80,7 +82,7 @@ public class AnnosDao implements Dao< Annos, Integer> {
     @Override
     public void delete(Integer key) throws SQLException {
         Connection conn = database.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("DELETE FROM Annos WHERE id = ?");
+        PreparedStatement stmt = conn.prepareStatement("DELETE FROM Annos WHERE nimi = ?");
 
         stmt.setInt(1, key);
         stmt.executeUpdate();
@@ -107,7 +109,7 @@ public class AnnosDao implements Dao< Annos, Integer> {
         ResultSet rs = stmt.executeQuery();
         rs.next(); // vain 1 tulos
 
-        Annos a = new Annos(rs.getInt("id"),rs.getString("nimi"));
+        Annos a = new Annos(rs.getString("nimi"));
 
         stmt.close();
         rs.close();
@@ -131,5 +133,10 @@ public class AnnosDao implements Dao< Annos, Integer> {
         conn.close();
 
         return annos;
+    }
+
+    @Override
+    public Annos findOne(Integer key) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

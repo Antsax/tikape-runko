@@ -3,21 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package drinkkiappi;
+package tikape.runko.domain;
 
 /**
  *
  * @author toukk
  */
-public class Annos {
+public class Raakaaine {
     
 
     private String nimi;
-    private Integer id;
 
-    public Annos(Integer id, String nimi) {
+    public Raakaaine( String nimi) {
         this.nimi = nimi;
-        this.id = id;
     }
 
     public String getNimi() {
@@ -28,12 +26,5 @@ public class Annos {
         this.nimi = nimi;
     }
     
-     public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
     
 }
