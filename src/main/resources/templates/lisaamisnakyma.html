@@ -1,58 +1,60 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 
-<html>
+<html><head>
+  <title>Härpäke</title>
+</head>
+<body>
 
-    <head>
-        <title>Drinkit</title>
-    </head>
+  <h2>Drinkit</h2>
 
-    <body>
-        <h1>Drinkit</h1>
-        <h2>Lisää uusi</h2>
-        <p>Drinkin nimi: </p>
-        <form action="/create" method="POST">
-            <input type="text" name="drinkki"/>
-            <input type="submit"/>
-        </form>
+  <ul>
+	<li th:each="annos : ${annokset}">
+		<a th:href="@{~/drinkki/{id}(id=${annos.id})}">
+                    <span th:text="${annos.nimi}">Annos</span>
+                </a>
+		(<a href="@{~/drinkki/{id}(id=${annos.id})}/poista">poista</a>)
+	</li>
+  </ul>
 
-        <h3>Lisää raaka-aineita </h3>
-        <p>Drinkin nimi: </p>
-        <select name ="drinkit"> 
-            <option name =""></option>
-            <!-- tähän jotain settiä millä saa listan tästä-->
-            <option name =""></option>
-        </select>
-        <p>Lisättävä raaka-aine: </p>
-        <select name="raakaAine">
-            <option name=""></option>
-            <option name=""></option>
-        </select>
-        <p>Järjestys</p>
-        <form>
-            <input type="text"/> 
-        </form>
-        <p> Määrä </p>
-        <form> 
-            <input type="text"/>
-        </form>
-        <p>Ohje</p>
-        <form>
-            <input type="text"/>
-        </form>
-        <form action="/create" method="POST">
-            <input type="submit"/>
-        </form>
-        <!-- Tämä osa luo uusi drinkki sivulle, huonekalun tilalle nykyisen tietokannan nimi
-        <form action="/create" method="POST">
-            <input type="text" name="huonekalu"/>
-            <input type="submit"/>
-        </form>
-        Jätän kommenttina koska syyt-->
-    </body>
 
-</html>
+  <h4>Lisää uusi</h4>
+  
+  <form method="POST" action="">
+      Drinkin nimi:<br>
+      <input name="aine" type="text"><br>
+      <input value="Lisää" type="submit">
+  </form>
+
+  <h4>Lisää raaka-aineita</h4>
+
+  <form action="" method="post"">
+      Smoothien nimi:<br>
+      <select name="drinkki">
+	<option th:each="nimi: ${annokset}" th:value="${annos.id}" th:text="${annos.nimi}">
+          annos
+	</option>
+      </select>
+      <br>
+      Lisättävä raaka-aine<br>
+      <select name="raakaAine">
+        <option th:each="nimi: ${raakaAineet}" th:value="${raakaAine.id}" th:text="${raakaAine.nimi}">
+          raakaAine
+	</option>
+      </select>
+      <br>
+      Järjestys<br>
+      <input name ="jarjestys" type="text"><br>
+      Määrä<br>
+      <input type="text"><br>
+      Ohje<br>
+      <input type="text"><br>
+      <input value="Lisää" type="submit">
+  </form>
+
+  <ul>
+    <li>
+      <a href="../">Drinkkilistaukseen</a>
+    </li>
+  </ul>
+
+<div></div></body></html>
