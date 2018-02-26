@@ -98,7 +98,7 @@ public class AnnosDao {
     private Annos save(Annos annos) throws SQLException {
 
         Connection conn = database.getConnection();
-        if (findOne(annos.getNimi()) != null){
+        if (!annos.getNimi().isEmpty()){
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO Annos"
                 + " (nimi)"
                 + " VALUES (?)");

@@ -88,7 +88,7 @@ public class RaakaaineDao {
     public Raakaaine save(Raakaaine raakaaine) throws SQLException {
 
         Connection conn = database.getConnection();
-        if (findOne(raakaaine.getNimi()) != null){
+        if (!raakaaine.getNimi().isEmpty()){
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO Raakaaine"
                 + " (nimi)"
                 + " VALUES (?)");
