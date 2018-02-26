@@ -1,4 +1,4 @@
-# tikape-runko
+# Drinkkiapplikaatio
 
 Tietokantojen perusteet -kurssilla tehtävän web-sovelluksen pohja.
 
