@@ -1,0 +1,50 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Raakaaineet</title>
+            <style>
+            body  {
+                background-image: url("https://c1.staticflickr.com/4/3764/11781986025_6321e3fbe1_k.jpg");
+                background-size: cover;
+            }
+        </style>
+        
+    </head>
+
+    <body>
+        <h1>Raakaaineet</h1>
+
+        <p>
+            Lista drinkkeihin käytettävistä raaka-aineista.
+        </p>
+
+        <ul>
+            <li th:each="annos : ${lista}">
+                <span th:text="${annos.nimi}">
+                    nimi
+                </span>
+
+                <form th:action="@{~/poista/raakaaineet/{id} (id=${annos.nimi})}" method ="POST"> <input type="submit" value="Poista"/></form>
+                
+            </li>
+        </ul>
+	<p2>
+	     
+	     Lisää uusi raaka-aine
+             <br/>
+             <br/>
+        </p2>
+        <form action="/raakaaineet/create" method="POST">
+            <span>Raaka-aine:</span><br/>
+    	    <input name ="nimi" type="text"/><br/>
+            <input value="Lisää raaka-aine" type="submit" />
+        </form>
+	<p3>
+            <br/>
+            <br/>
+	<a href="/">Drinkkilistaukseen</a>.
+	</p3>
+    </body>
+
+</html>

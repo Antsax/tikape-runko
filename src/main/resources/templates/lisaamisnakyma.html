@@ -1,60 +1,71 @@
-<!DOCTYPE html>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-<html><head>
-  <title>Härpäke</title>
-</head>
-<body>
+    <head>
 
-  <h2>Drinkit</h2>
 
-  <ul>
-	<li th:each="annos : ${annokset}">
-		<a th:href="@{~/drinkki/{id}(id=${annos.id})}">
+        <title>Härpäke</title>
+        <style>
+            body  {
+                background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/72/Drink-428310_1920.jpg");
+                background-size: cover;
+            }
+        </style>
+
+    </head>
+    <body>
+
+        <h2>Drinkit</h2>
+
+        <ul>
+            <li th:each="annos : ${annokset}">
+                <a th:href="@{~/drinkki/{id}(id=${annos.nimi})}">
                     <span th:text="${annos.nimi}">Annos</span>
                 </a>
-		(<a href="@{~/drinkki/{id}(id=${annos.id})}/poista">poista</a>)
-	</li>
-  </ul>
+                <!--(<a href="@{~/poista/drinkki/{id}(id=${annos.nimi})}">poista</a>)-->
+                <form th:action="@{~/poista/drinkki/{id} (id=${annos.nimi})}" method ="POST"> <input type="submit" value="Poista"/></form>
+            </li>
+        </ul>
 
 
-  <h4>Lisää uusi</h4>
-  
-  <form method="POST" action="">
-      Drinkin nimi:<br>
-      <input name="aine" type="text"><br>
-      <input value="Lisää" type="submit">
-  </form>
+        <h4>Lisää uusi</h4>
 
-  <h4>Lisää raaka-aineita</h4>
+        <form  method="POST" action="/drinkki/create">
+            Drinkin nimi:
+            <br/>
+            <input name="nimi" type="text"/>
+            <br/>
+            <input value="Lisää" type="submit"/>
+        </form>
 
-  <form action="" method="post"">
-      Smoothien nimi:<br>
-      <select name="drinkki">
-	<option th:each="nimi: ${annokset}" th:value="${annos.id}" th:text="${annos.nimi}">
-          annos
-	</option>
-      </select>
-      <br>
-      Lisättävä raaka-aine<br>
-      <select name="raakaAine">
-        <option th:each="nimi: ${raakaAineet}" th:value="${raakaAine.id}" th:text="${raakaAine.nimi}">
-          raakaAine
-	</option>
-      </select>
-      <br>
-      Järjestys<br>
-      <input name ="jarjestys" type="text"><br>
-      Määrä<br>
-      <input type="text"><br>
-      Ohje<br>
-      <input type="text"><br>
-      <input value="Lisää" type="submit">
-  </form>
+        <h4>Lisää raaka-aineita</h4>
 
-  <ul>
-    <li>
-      <a href="../">Drinkkilistaukseen</a>
-    </li>
-  </ul>
+        <form action="/drinkkiraakaaineet/create" method="post">
+            Drinkin nimi:<br/>
+            <select name="drinkki">
+                <option th:each="annos: ${annokset}" th:value="${annos.nimi}" th:text="${annos.nimi}">
+                    annos
+                </option>
+            </select>
+            <br/>
+            Lisättävä raaka-aine<br/>
+            <select name="raakaAine">
+                <option th:each="raakaAine: ${raakaAineet}" th:value="${raakaAine.nimi}" th:text="${raakaAine.nimi}">
+                    raakaAine
+                </option>
+            </select>
+            <br/>
+            Määrä<br/>
+            <input type="text" name="maara"/><br/>
+            Ohje<br/>
+            <input type="text" name="ohje"/><br/>
+            <input value="Lisää" type="submit"/>
+        </form>
 
-<div></div></body></html>
+        <ul>
+            <li>
+                <a href="../">Drinkkilistaukseen</a>
+            </li>
+        </ul>
+
+        <div></div></body></html>

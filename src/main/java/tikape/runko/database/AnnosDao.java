@@ -18,7 +18,7 @@ import tikape.runko.*;
  *
  * @author toukk
  */
-public class AnnosDao implements Dao< Annos, Integer> {
+public class AnnosDao {
 
     private Database database;
 
@@ -47,7 +47,7 @@ public class AnnosDao implements Dao< Annos, Integer> {
         return a;
     }
 
-    @Override
+   
     public List<Annos> findAll() throws SQLException {
         List<Annos> Annokset = new ArrayList<>();
 
@@ -68,7 +68,7 @@ public class AnnosDao implements Dao< Annos, Integer> {
         return Annokset;
     }
 
-    @Override
+   
     public Annos saveOrUpdate(Annos object) throws SQLException {
         Annos tarkastelu = findOne(object.getNimi());
         if (tarkastelu == null) {
@@ -79,21 +79,26 @@ public class AnnosDao implements Dao< Annos, Integer> {
         }
     }
 
-    @Override
-    public void delete(Integer key) throws SQLException {
+    public void delete(String key) throws SQLException {
         Connection conn = database.getConnection();
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM Annos WHERE nimi = ?");
-
-        stmt.setInt(1, key);
+        
+        stmt.setString(1, key);
         stmt.executeUpdate();
-
+        
+        
         stmt.close();
+        
+        stmt = conn.prepareStatement("DELETE FROM AnnosRaakaaine where annos_nimi = ?");
+        stmt.setString(1, key);
+        stmt.executeUpdate();
         conn.close();
     }
 
     private Annos save(Annos annos) throws SQLException {
 
         Connection conn = database.getConnection();
+        if (findOne(annos.getNimi()) != null){
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO Annos"
                 + " (nimi)"
                 + " VALUES (?)");
@@ -102,21 +107,25 @@ public class AnnosDao implements Dao< Annos, Integer> {
         stmt.executeUpdate();
         stmt.close();
 
-        stmt = conn.prepareStatement("SELECT * FROM Annos"
-                + " WHERE nimi = ?");
-        stmt.setString(1, annos.getNimi());
+        PreparedStatement stmt1
+                = conn.prepareStatement("SELECT * FROM Annos"
+                        + " WHERE nimi = ?");
+        stmt1.setString(1, annos.getNimi());
 
-        ResultSet rs = stmt.executeQuery();
-        rs.next(); // vain 1 tulos
-
+        ResultSet rs = stmt1.executeQuery();
+        rs.next();
         Annos a = new Annos(rs.getString("nimi"));
 
-        stmt.close();
+        stmt1.close();
         rs.close();
 
         conn.close();
 
         return a;
+        } else {
+            conn.close();
+            return null;
+        }
     }
 
     // Huom, en implementoi tata kun ei tarvita
@@ -135,8 +144,6 @@ public class AnnosDao implements Dao< Annos, Integer> {
         return annos;
     }
 
-    @Override
-    public Annos findOne(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
+    
 }

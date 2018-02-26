@@ -68,30 +68,27 @@ public class RaakaaineDao {
         return Raakaaineet;
     }
 
-    public Raakaaine saveOrUpdate(Raakaaine object) throws SQLException {
-        Raakaaine tarkastelu = findOne(object.getNimi());
-        if (tarkastelu == null) {
-            return save(tarkastelu);
-        } else {
 
-            return update(tarkastelu);
-        }
-    }
-
-    public void delete(Integer key) throws SQLException {
+    public void delete(String key) throws SQLException {
         Connection conn = database.getConnection();
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM Raakaaine WHERE nimi = ?");
 
-        stmt.setInt(1, key);
+        stmt.setString(1, key);
         stmt.executeUpdate();
 
         stmt.close();
+        
+        stmt = conn.prepareStatement("DELETE FROM AnnosRaakaaine where raakaaine_nimi = ?");
+        
+        stmt.setString(1, key);
+        stmt.executeUpdate();
         conn.close();
     }
 
-    private Raakaaine save(Raakaaine raakaaine) throws SQLException {
+    public Raakaaine save(Raakaaine raakaaine) throws SQLException {
 
         Connection conn = database.getConnection();
+        if (findOne(raakaaine.getNimi()) != null){
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO Raakaaine"
                 + " (nimi)"
                 + " VALUES (?)");
@@ -115,6 +112,10 @@ public class RaakaaineDao {
         conn.close();
 
         return a;
+        } else {
+            conn.close();
+            return null;
+        }
     }
 
     // Huom, en implementoi tata kun ei tarvita
